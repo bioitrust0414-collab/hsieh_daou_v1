@@ -77,21 +77,34 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "國學知識庫 · 上古典籍講演筆記" },
+      {
+        name: "description",
+        content:
+          "以講演筆記形式重構《山海經》等國學典籍：從地理、動物、植物、醫學到神話，逐篇解構華夏先民的世界觀。",
+      },
+      { name: "author", content: "國學知識庫" },
+      { property: "og:title", content: "國學知識庫" },
+      {
+        property: "og:description",
+        content: "從《山海經》開始，逐篇解讀上古典籍中的文化密碼。",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+      },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Ma+Shan+Zheng&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
