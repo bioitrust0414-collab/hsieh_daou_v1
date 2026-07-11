@@ -10,10 +10,10 @@ export const Route = createFileRoute("/")({
         content:
           "謝天地的修道丹心：以講演筆記形式重構《山海經》等國學典籍，從地理、動物、植物、醫藥到神話，逐篇解構華夏先民的世界觀。",
       },
-      { property: "og:title", content: "謝天地的修道丹心" },
+      { property: "og:title", content: "謝天地的修道丹心 · 國學典籍講演筆記" },
       {
         property: "og:description",
-        content: "從《山海經》開始，逐篇解讀上古典籍中的文化密碼。",
+        content: "謝天地的修道丹心：以講演筆記形式重構《山海經》等國學典籍，從地理、動物、植物、醫藥到神話，逐篇解構華夏先民的世界觀。",
       },
     ],
   }),
