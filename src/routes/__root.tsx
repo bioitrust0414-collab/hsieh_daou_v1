@@ -77,14 +77,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "國學知識庫 · 上古典籍講演筆記" },
+      { title: "謝天地的修道丹心 · 國學典籍講演筆記" },
       {
         name: "description",
         content:
-          "以講演筆記形式重構《山海經》等國學典籍：從地理、動物、植物、醫學到神話，逐篇解構華夏先民的世界觀。",
+          "謝天地的修道丹心：以講演筆記形式重構《山海經》等國學典籍，從地理、動物、植物、醫學到神話，逐篇解構華夏先民的世界觀。",
       },
-      { name: "author", content: "國學知識庫" },
-      { property: "og:title", content: "國學知識庫" },
+      { name: "author", content: "謝天地的修道丹心" },
+      { property: "og:title", content: "謝天地的修道丹心" },
       {
         property: "og:description",
         content: "從《山海經》開始，逐篇解讀上古典籍中的文化密碼。",
@@ -103,7 +103,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Ma+Shan+Zheng&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Long+Cang&family=Liu+Jian+Mao+Cao&family=Zhi+Mang+Xing&display=swap",
       },
     ],
   }),
