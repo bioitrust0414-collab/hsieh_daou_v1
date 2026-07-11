@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { findEpisode, allEpisodes } from "@/content/shanhaijing";
+import { findEpisode, allEpisodes, type Episode, type Chapter } from "@/content/shanhaijing";
 
 export const Route = createFileRoute("/shanhaijing/$slug")({
   loader: ({ params }) => {
@@ -50,7 +50,7 @@ export const Route = createFileRoute("/shanhaijing/$slug")({
 });
 
 function EpisodePage() {
-  const { episode, chapter } = Route.useLoaderData();
+  const { episode, chapter } = Route.useLoaderData() as { episode: Episode; chapter: Chapter };
 
   const idx = allEpisodes.findIndex((e) => e.slug === episode.slug);
   const prev = idx > 0 ? allEpisodes[idx - 1] : null;
