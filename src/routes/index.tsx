@@ -4,13 +4,13 @@ import { chapters, collectionMeta, allEpisodes } from "@/content/shanhaijing";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "國學知識庫 · 上古典籍講演筆記" },
+      { title: "謝天地的修道丹心 · 國學典籍講演筆記" },
       {
         name: "description",
         content:
-          "以講演筆記形式重構《山海經》等國學典籍：從地理、動物、植物、醫學、巫術到神話，逐篇解構華夏先民的世界觀。",
+          "謝天地的修道丹心：以講演筆記形式重構《山海經》等國學典籍，從地理、動物、植物、醫藥到神話，逐篇解構華夏先民的世界觀。",
       },
-      { property: "og:title", content: "國學知識庫 · 上古典籍講演筆記" },
+      { property: "og:title", content: "謝天地的修道丹心" },
       {
         property: "og:description",
         content: "從《山海經》開始，逐篇解讀上古典籍中的文化密碼。",
@@ -32,10 +32,10 @@ function Home() {
             <div className="seal text-lg">國學典藏</div>
           </div>
           <p className="text-sm tracking-[0.4em] text-bronze mb-6">
-            ZHĪ · SHÌ · TIÁN
+            XIÈ · TIĀN · DÌ
           </p>
-          <h1 className="text-5xl md:text-7xl font-semibold text-foreground leading-tight">
-            國學知識庫
+          <h1 className="brand-title text-6xl md:text-8xl font-normal text-foreground leading-tight">
+            謝天地的修道丹心
           </h1>
           <p className="mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground leading-relaxed">
             以講演筆記為體，以古籍為骨。從《山海經》開始，逐篇重構上古文明的地理、生物、醫藥與神話。
@@ -140,8 +140,8 @@ export function SiteHeader() {
     <header className="border-b border-border/70 backdrop-blur bg-background/70 sticky top-0 z-10">
       <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3">
-          <span className="seal text-xs h-9">典</span>
-          <span className="font-semibold tracking-wider">國學知識庫</span>
+          <span className="seal text-xs h-9">丹</span>
+          <span className="brand-title text-xl">謝天地的修道丹心</span>
         </Link>
         <nav className="flex items-center gap-6 text-sm">
           <Link
@@ -165,13 +165,33 @@ export function SiteHeader() {
   );
 }
 
+const socialLinks = [
+  { name: "YouTube", href: "https://www.youtube.com/", label: "YT" },
+  { name: "Instagram", href: "https://www.instagram.com/", label: "IG" },
+  { name: "Facebook", href: "https://www.facebook.com/", label: "FB" },
+  { name: "LINE", href: "https://line.me/", label: "LINE" },
+];
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-border/70 mt-12">
-      <div className="mx-auto max-w-6xl px-6 py-10 text-sm text-muted-foreground flex flex-wrap items-center justify-between gap-4">
-        <div>© {new Date().getFullYear()} 國學知識庫 · 以講演之筆重繪古卷</div>
-        <div className="text-xs tracking-widest text-bronze">
-          KNOWLEDGE · SCROLL · LECTURE
+      <div className="mx-auto max-w-6xl px-6 py-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div className="text-sm text-muted-foreground">
+          © {new Date().getFullYear()} 謝天地的修道丹心 · 以講演之筆重繪古卷
+        </div>
+        <div className="flex items-center gap-3">
+          {socialLinks.map((s) => (
+            <a
+              key={s.name}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={s.name}
+              className="inline-flex h-10 min-w-10 items-center justify-center rounded-full border border-border bg-card/60 px-3 text-xs font-medium tracking-wider text-foreground/80 hover:text-primary-foreground hover:bg-primary hover:border-primary transition-colors"
+            >
+              {s.label}
+            </a>
+          ))}
         </div>
       </div>
     </footer>
