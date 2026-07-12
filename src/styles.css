@@ -39,8 +39,8 @@
   --color-bronze: var(--bronze);
   --color-vermilion: var(--vermilion);
   --font-serif-tc: "Noto Serif TC", "Songti TC", "STSong", "SimSun", serif;
-  --font-display: "Zhi Mang Xing", "Liu Jian Mao Cao", "Long Cang", "Noto Serif TC", cursive;
-  --font-brush: "Liu Jian Mao Cao", "Long Cang", "Zhi Mang Xing", cursive;
+  --font-display: "Noto Serif TC", "Songti TC", "STSong", "SimSun", serif;
+  --font-brush: "Ma Shan Zheng", "Noto Serif TC", cursive;
 }
 
 :root {
@@ -136,8 +136,9 @@
   }
 
   .brand-title {
-    font-family: var(--font-display);
+    font-family: var(--font-brush);
     letter-spacing: 0.08em;
+    font-weight: 400;
   }
 }
 

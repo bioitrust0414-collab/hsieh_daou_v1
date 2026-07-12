@@ -1,9 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { findEpisode, allEpisodes, type Episode, type Chapter } from "@/content/shanhaijing";
+import { findEpisode, allEpisodes, type Episode, type Chapter } from "@/content/daojia";
 import { useLang, useT, pick } from "@/lib/i18n";
 import { LangProvider } from "./index";
 
-export const Route = createFileRoute("/shanhaijing/$slug")({
+export const Route = createFileRoute("/daojia/$slug")({
   loader: ({ params }) => {
     const found = findEpisode(params.slug);
     if (!found) throw notFound();
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/shanhaijing/$slug")({
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "篇章未找到" }] };
     const { episode, chapter } = loaderData;
-    const title = `${episode.title.zh} · ${chapter.name.zh} · 山海經`;
+    const title = `${episode.title.zh} · ${chapter.name.zh} · 道家心法`;
     const desc = `${episode.subtitle.zh}。${episode.sections[0]?.body.zh[0] ?? ""}`.slice(0, 155);
     return {
       meta: [
@@ -43,7 +43,7 @@ function NotFoundView() {
     <main className="mx-auto max-w-3xl px-6 py-24 text-center">
       <h1 className="text-3xl font-semibold">{t("not_found_title")}</h1>
       <p className="mt-4 text-muted-foreground">{t("not_found_desc")}</p>
-      <Link to="/shanhaijing" className="mt-6 inline-block text-bronze underline underline-offset-4">
+      <Link to="/daojia" className="mt-6 inline-block text-bronze underline underline-offset-4">
         {t("back_to")}
       </Link>
     </main>
@@ -77,7 +77,7 @@ function EpisodePage() {
       <nav className="text-sm text-muted-foreground mb-8 flex items-center gap-2">
         <Link to="/" className="hover:text-foreground">{t("nav_home")}</Link>
         <span>／</span>
-        <Link to="/shanhaijing" className="hover:text-foreground">{t("nav_shanhaijing")}</Link>
+        <Link to="/daojia" className="hover:text-foreground">{t("nav_daojia")}</Link>
         <span>／</span>
         <span className="text-foreground/80">{pick(chapter.name, lang)}</span>
       </nav>
@@ -135,13 +135,13 @@ function EpisodePage() {
 
       <nav className="mt-16 pt-8 border-t border-border grid gap-4 md:grid-cols-2">
         {prev ? (
-          <Link to="/shanhaijing/$slug" params={{ slug: prev.slug }} className="scroll-card p-4 group">
+          <Link to="/daojia/$slug" params={{ slug: prev.slug }} className="scroll-card p-4 group">
             <div className="text-xs text-bronze tracking-widest">← {t("prev_ep")} · {prev.ep}</div>
             <div className="mt-1 font-semibold group-hover:text-bronze transition-colors">{pick(prev.title, lang)}</div>
           </Link>
         ) : <div />}
         {next ? (
-          <Link to="/shanhaijing/$slug" params={{ slug: next.slug }} className="scroll-card p-4 text-right group">
+          <Link to="/daojia/$slug" params={{ slug: next.slug }} className="scroll-card p-4 text-right group">
             <div className="text-xs text-bronze tracking-widest">{t("next_ep")} · {next.ep} →</div>
             <div className="mt-1 font-semibold group-hover:text-bronze transition-colors">{pick(next.title, lang)}</div>
           </Link>

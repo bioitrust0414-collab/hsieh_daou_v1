@@ -10,13 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ShanhaijingRouteImport } from './routes/shanhaijing'
+import { Route as DaojiaRouteImport } from './routes/daojia'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShanhaijingIndexRouteImport } from './routes/shanhaijing.index'
+import { Route as DaojiaIndexRouteImport } from './routes/daojia.index'
 import { Route as ShanhaijingSlugRouteImport } from './routes/shanhaijing.$slug'
 
 const ShanhaijingRoute = ShanhaijingRouteImport.update({
   id: '/shanhaijing',
   path: '/shanhaijing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DaojiaRoute = DaojiaRouteImport.update({
+  id: '/daojia',
+  path: '/daojia',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -29,6 +36,11 @@ const ShanhaijingIndexRoute = ShanhaijingIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ShanhaijingRoute,
 } as any)
+const DaojiaIndexRoute = DaojiaIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DaojiaRoute,
+} as any)
 const ShanhaijingSlugRoute = ShanhaijingSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -37,32 +49,51 @@ const ShanhaijingSlugRoute = ShanhaijingSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/daojia': typeof DaojiaRouteWithChildren
   '/shanhaijing': typeof ShanhaijingRouteWithChildren
   '/shanhaijing/$slug': typeof ShanhaijingSlugRoute
+  '/daojia/': typeof DaojiaIndexRoute
   '/shanhaijing/': typeof ShanhaijingIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/shanhaijing/$slug': typeof ShanhaijingSlugRoute
+  '/daojia': typeof DaojiaIndexRoute
   '/shanhaijing': typeof ShanhaijingIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/daojia': typeof DaojiaRouteWithChildren
   '/shanhaijing': typeof ShanhaijingRouteWithChildren
   '/shanhaijing/$slug': typeof ShanhaijingSlugRoute
+  '/daojia/': typeof DaojiaIndexRoute
   '/shanhaijing/': typeof ShanhaijingIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/shanhaijing' | '/shanhaijing/$slug' | '/shanhaijing/'
+  fullPaths:
+    | '/'
+    | '/daojia'
+    | '/shanhaijing'
+    | '/shanhaijing/$slug'
+    | '/daojia/'
+    | '/shanhaijing/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/shanhaijing/$slug' | '/shanhaijing'
-  id: '__root__' | '/' | '/shanhaijing' | '/shanhaijing/$slug' | '/shanhaijing/'
+  to: '/' | '/shanhaijing/$slug' | '/daojia' | '/shanhaijing'
+  id:
+    | '__root__'
+    | '/'
+    | '/daojia'
+    | '/shanhaijing'
+    | '/shanhaijing/$slug'
+    | '/daojia/'
+    | '/shanhaijing/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DaojiaRoute: typeof DaojiaRouteWithChildren
   ShanhaijingRoute: typeof ShanhaijingRouteWithChildren
 }
 
@@ -73,6 +104,13 @@ declare module '@tanstack/react-router' {
       path: '/shanhaijing'
       fullPath: '/shanhaijing'
       preLoaderRoute: typeof ShanhaijingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/daojia': {
+      id: '/daojia'
+      path: '/daojia'
+      fullPath: '/daojia'
+      preLoaderRoute: typeof DaojiaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -89,6 +127,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShanhaijingIndexRouteImport
       parentRoute: typeof ShanhaijingRoute
     }
+    '/daojia/': {
+      id: '/daojia/'
+      path: '/'
+      fullPath: '/daojia/'
+      preLoaderRoute: typeof DaojiaIndexRouteImport
+      parentRoute: typeof DaojiaRoute
+    }
     '/shanhaijing/$slug': {
       id: '/shanhaijing/$slug'
       path: '/$slug'
@@ -98,6 +143,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface DaojiaRouteChildren {
+  DaojiaIndexRoute: typeof DaojiaIndexRoute
+}
+
+const DaojiaRouteChildren: DaojiaRouteChildren = {
+  DaojiaIndexRoute: DaojiaIndexRoute,
+}
+
+const DaojiaRouteWithChildren =
+  DaojiaRoute._addFileChildren(DaojiaRouteChildren)
 
 interface ShanhaijingRouteChildren {
   ShanhaijingSlugRoute: typeof ShanhaijingSlugRoute
@@ -115,6 +171,7 @@ const ShanhaijingRouteWithChildren = ShanhaijingRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DaojiaRoute: DaojiaRouteWithChildren,
   ShanhaijingRoute: ShanhaijingRouteWithChildren,
 }
 export const routeTree = rootRouteImport
