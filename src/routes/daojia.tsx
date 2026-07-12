@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { LangProvider, SiteHeader, SiteFooter } from "./index";
 
-export const Route = createFileRoute("/shanhaijing")({
+export const Route = createFileRoute("/daojia")({
   component: () => (
     <LangProvider>
       <div className="min-h-screen flex flex-col">

@@ -1,23 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { chapters, collectionMeta } from "@/content/shanhaijing";
+import { chapters, collectionMeta } from "@/content/daojia";
 import { useLang, useT, pick } from "@/lib/i18n";
 
-export const Route = createFileRoute("/shanhaijing/")({
+export const Route = createFileRoute("/daojia/")({
   head: () => ({
     meta: [
-      { title: "山海經講演筆記 · 國學知識庫" },
+      { title: "道家心法講演筆記 · 國學知識庫" },
       {
         name: "description",
-        content: "《山海經》講演系列：南山經、西山經、北山經、東山經、中山經共 10 集。",
+        content: "道家心法系列：從端午地臘日的逆天改命到太上老君降臨鶴鳴山，聚焦節氣、聖山與內丹修行。",
       },
-      { property: "og:title", content: "山海經講演筆記 · Shan Hai Jing Lectures" },
+      { property: "og:title", content: "道家心法 · Daoist Practice" },
       { property: "og:description", content: collectionMeta.description.zh },
     ],
   }),
-  component: ShanhaijingIndex,
+  component: DaojiaIndex,
 });
 
-function ShanhaijingIndex() {
+function DaojiaIndex() {
   const { lang } = useLang();
   const t = useT();
   return (
@@ -39,9 +39,7 @@ function ShanhaijingIndex() {
             <div className="flex items-center gap-4 mb-6">
               <div className="seal text-sm h-16">{c.directionChar}</div>
               <div>
-                <div className="text-xs tracking-widest text-bronze">
-                  {pick(c.direction, lang)}
-                </div>
+                <div className="text-xs tracking-widest text-bronze">{pick(c.direction, lang)}</div>
                 <h2 className="text-3xl font-semibold">{pick(c.name, lang)}</h2>
               </div>
             </div>
@@ -53,7 +51,7 @@ function ShanhaijingIndex() {
               {c.episodes.map((ep) => (
                 <Link
                   key={ep.slug}
-                  to="/shanhaijing/$slug"
+                  to="/daojia/$slug"
                   params={{ slug: ep.slug }}
                   className="scroll-card p-6 group transition-transform hover:-translate-y-1"
                 >
