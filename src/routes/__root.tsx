@@ -8,6 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { useLiff } from "../hooks/use-liff";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -110,6 +111,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Ma+Shan+Zheng&display=swap",
       },
     ],
+    scripts: [
+      {
+        src: "https://d.line-scdn.net/liff/edge/2/sdk.js",
+        async: true,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -133,9 +140,28 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { isInitialized, isInLineApp, profile, error } = useLiff();
+
+  useEffect(() => {
+    if (isInitialized) {
+      console.log('[ROOT] LIFF Status:', {
+        isInLineApp,
+        hasProfile: !!profile,
+        error: error?.message,
+      });
+    }
+  }, [isInitialized, isInLineApp, profile, error]);
 
   return (
     <QueryClientProvider client={queryClient}>
+      {/* LIFF Status Debug Banner (remove in production) */}
+      {process.env.NODE_ENV === 'development' && isInitialized && (
+        <div className="fixed bottom-4 right-4 z-50 bg-slate-900 text-white px-4 py-2 rounded text-xs max-w-xs">
+          <div>LIFF: {isInLineApp ? '✓ In LINE' : '✗ Not in LINE'}</div>
+          {profile && <div>User: {profile.displayName}</div>}
+          {error && <div className="text-red-400">Error: {error.message}</div>}
+        </div>
+      )}
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>
