@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { recordLineLogin } from '../lib/supabase';
 
 interface LiffProfile {
   userId: string;
@@ -55,20 +56,29 @@ export function useLiff(): UseLiffReturn {
         const inLineApp = liff.isInClient();
         setIsInLineApp(inLineApp);
 
-        // Get user profile if in LINE app and logged in
-        if (inLineApp && liff.isLoggedIn()) {
-          const profile = await liff.getProfile();
+        // Get user profile whenever logged in — in-client login is silent
+        // (happens automatically for OA friends), browser login only gets
+        // here after a completed OAuth redirect, both cases are real logins.
+        if (liff.isLoggedIn()) {
+          const lineProfile = await liff.getProfile();
           setProfile({
-            userId: profile.userId,
-            displayName: profile.displayName,
-            pictureUrl: profile.pictureUrl,
-            statusMessage: profile.statusMessage,
+            userId: lineProfile.userId,
+            displayName: lineProfile.displayName,
+            pictureUrl: lineProfile.pictureUrl,
+            statusMessage: lineProfile.statusMessage,
+          });
+          recordLineLogin({
+            line_user_id: lineProfile.userId,
+            display_name: lineProfile.displayName,
+            picture_url: lineProfile.pictureUrl,
+            status_message: lineProfile.statusMessage,
+            is_in_client: inLineApp,
           });
         }
 
         console.log('[LIFF] Initialized successfully', {
           inLineApp,
-          hasProfile: !!profile,
+          hasProfile: liff.isLoggedIn(),
         });
 
         // If we just came back from the LINE Login OAuth redirect with a
