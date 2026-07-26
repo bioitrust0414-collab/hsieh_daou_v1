@@ -8,7 +8,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { useLiff } from "../hooks/use-liff";
+import { LiffProvider, useLiffContext } from "../components/liff-provider";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -140,7 +140,20 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const { isInitialized, isInLineApp, profile, error } = useLiff();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LiffProvider>
+        <RootLiffDebug />
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+      </LiffProvider>
+    </QueryClientProvider>
+  );
+}
+
+function RootLiffDebug() {
+  const { isInitialized, isInLineApp, profile, error } = useLiffContext();
 
   useEffect(() => {
     if (isInitialized) {
@@ -152,18 +165,15 @@ function RootComponent() {
     }
   }, [isInitialized, isInLineApp, profile, error]);
 
+  if (!(process.env.NODE_ENV === 'development' && isInitialized)) {
+    return null;
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      {/* LIFF Status Debug Banner (remove in production) */}
-      {process.env.NODE_ENV === 'development' && isInitialized && (
-        <div className="fixed bottom-4 right-4 z-50 bg-slate-900 text-white px-4 py-2 rounded text-xs max-w-xs">
-          <div>LIFF: {isInLineApp ? '✓ In LINE' : '✗ Not in LINE'}</div>
-          {profile && <div>User: {profile.displayName}</div>}
-          {error && <div className="text-red-400">Error: {error.message}</div>}
-        </div>
-      )}
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
-    </QueryClientProvider>
+    <div className="fixed bottom-4 right-4 z-50 bg-slate-900 text-white px-4 py-2 rounded text-xs max-w-xs">
+      <div>LIFF: {isInLineApp ? '✓ In LINE' : '✗ Not in LINE'}</div>
+      {profile && <div>User: {profile.displayName}</div>}
+      {error && <div className="text-red-400">Error: {error.message}</div>}
+    </div>
   );
 }

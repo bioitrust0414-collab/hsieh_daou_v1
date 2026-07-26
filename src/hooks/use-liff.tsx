@@ -15,7 +15,12 @@ interface UseLiffReturn {
   login: () => void;
   logout: () => void;
   openWindow: (url: string, target?: string) => void;
+  loginAndOpen: (url: string) => void;
 }
+
+// Query param used to carry the intended destination through the LINE Login
+// OAuth redirect (browser flow only; in-client flow never leaves the page).
+const REDIRECT_PARAM = "liffRedirectTo";
 
 /**
  * Hook to manage LIFF initialization and state
@@ -65,6 +70,21 @@ export function useLiff(): UseLiffReturn {
           inLineApp,
           hasProfile: !!profile,
         });
+
+        // If we just came back from the LINE Login OAuth redirect with a
+        // pending destination, and login succeeded, continue there now.
+        const params = new URLSearchParams(window.location.search);
+        const pendingUrl = params.get(REDIRECT_PARAM);
+        if (pendingUrl && liff.isLoggedIn()) {
+          window.open(decodeURIComponent(pendingUrl), '_blank');
+          params.delete(REDIRECT_PARAM);
+          const newSearch = params.toString();
+          const newUrl =
+            window.location.pathname +
+            (newSearch ? `?${newSearch}` : '') +
+            window.location.hash;
+          window.history.replaceState({}, '', newUrl);
+        }
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
         setError(error);
@@ -127,6 +147,41 @@ export function useLiff(): UseLiffReturn {
     []
   );
 
+  // Log in if needed, then open `url` (e.g. the OA add-friend page).
+  // In-client: login is silent, so we can open immediately after.
+  // Browser: liff.login() is a full-page OAuth redirect, so we pass the
+  // target along as a query param and resume it after the redirect back
+  // (see the pending-redirect check in the init effect above).
+  const loginAndOpen = useCallback(
+    async (url: string) => {
+      if (typeof window === 'undefined') return;
+
+      try {
+        const { liff } = await import('@line/liff');
+
+        if (liff.isInClient()) {
+          if (!liff.isLoggedIn()) {
+            liff.login();
+          }
+          liff.openWindow({ url, external: true });
+          return;
+        }
+
+        if (liff.isLoggedIn()) {
+          window.open(url, '_blank');
+          return;
+        }
+
+        const redirectUri = `${window.location.origin}${window.location.pathname}?${REDIRECT_PARAM}=${encodeURIComponent(url)}`;
+        liff.login({ redirectUri });
+      } catch (err) {
+        console.error('[LIFF] loginAndOpen failed:', err);
+        window.open(url, '_blank');
+      }
+    },
+    []
+  );
+
   return {
     isInitialized,
     isInLineApp,
@@ -135,5 +190,6 @@ export function useLiff(): UseLiffReturn {
     login,
     logout,
     openWindow,
+    loginAndOpen,
   };
 }

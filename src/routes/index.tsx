@@ -1,6 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { LangProvider, useLang, useT, pick, type Lang } from "@/lib/i18n";
 import { collections } from "@/content/collections";
+import { useLiffContext } from "@/components/liff-provider";
+
+// LINE OA add-friend link for @297yfqpc
+const LINE_OA_FRIEND_URL = "https://line.me/R/ti/p/@297yfqpc";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -199,12 +203,16 @@ const socialLinks = [
   { name: "YouTube", href: "https://www.youtube.com/", label: "YT" },
   { name: "Instagram", href: "https://www.instagram.com/", label: "IG" },
   { name: "Facebook", href: "https://www.facebook.com/", label: "FB" },
-  { name: "LINE", href: "https://line.me/", label: "LINE" },
 ];
+
+const socialLinkClassName =
+  "inline-flex h-10 min-w-10 items-center justify-center rounded-full border border-border bg-card/60 px-3 text-xs font-medium tracking-wider text-foreground/80 hover:text-primary-foreground hover:bg-primary hover:border-primary transition-colors";
 
 export function SiteFooter() {
   const { lang } = useLang();
   const t = useT();
+  const { loginAndOpen } = useLiffContext();
+
   return (
     <footer className="border-t border-border/70 mt-12">
       <div className="mx-auto max-w-6xl px-6 py-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -220,11 +228,19 @@ export function SiteFooter() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={s.name}
-              className="inline-flex h-10 min-w-10 items-center justify-center rounded-full border border-border bg-card/60 px-3 text-xs font-medium tracking-wider text-foreground/80 hover:text-primary-foreground hover:bg-primary hover:border-primary transition-colors"
+              className={socialLinkClassName}
             >
               {s.label}
             </a>
           ))}
+          <button
+            type="button"
+            onClick={() => loginAndOpen(LINE_OA_FRIEND_URL)}
+            aria-label="LINE"
+            className={socialLinkClassName}
+          >
+            LINE
+          </button>
         </div>
       </div>
     </footer>
