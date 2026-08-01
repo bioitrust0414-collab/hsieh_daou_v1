@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { chapters, collectionMeta } from "@/content/shanhaijing";
 import { useLang, useT, pick } from "@/lib/i18n";
+import { BrushTitle } from "@/components/brush-title";
 
 export const Route = createFileRoute("/shanhaijing/")({
   head: () => ({
@@ -26,7 +27,12 @@ function ShanhaijingIndex() {
         <p className="text-sm tracking-[0.4em] text-bronze mb-4">
           {collectionMeta.pinyin.toUpperCase()} · {pick(collectionMeta.index, lang).toUpperCase()}
         </p>
-        <h1 className="text-5xl md:text-6xl font-semibold">{pick(collectionMeta.title, lang)}</h1>
+        <BrushTitle
+          name="shanhaijing"
+          label={pick(collectionMeta.title, lang)}
+          className="text-foreground"
+          height="clamp(3rem, 8vw, 5rem)"
+        />
         <p className="mt-4 text-lg text-muted-foreground">{pick(collectionMeta.subtitle, lang)}</p>
         <p className="mt-6 max-w-3xl text-foreground/85 leading-loose">
           {pick(collectionMeta.description, lang)}
@@ -37,7 +43,7 @@ function ShanhaijingIndex() {
         {chapters.map((c) => (
           <section key={c.key} id={c.key}>
             <div className="flex items-center gap-4 mb-6">
-              <div className="seal text-sm h-16">{c.directionChar}</div>
+              <span className="seal-square h-14 w-14 shrink-0 text-2xl">{c.directionChar}</span>
               <div>
                 <div className="text-xs tracking-widest text-bronze">
                   {pick(c.direction, lang)}
