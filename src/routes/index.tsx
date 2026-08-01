@@ -71,7 +71,7 @@ function Home() {
                 name="brand"
                 label={lang === "zh" ? "謝天地的修道丹心" : "Xie Tian Di"}
                 className="text-foreground max-w-full"
-                height="clamp(3.5rem, 11vw, 8rem)"
+                height="clamp(2.75rem, 9vw, 6.5rem)"
               />
               <span className="seal-square mt-2 h-12 w-12 shrink-0 rotate-3 text-2xl md:h-16 md:w-16 md:text-3xl">
                 丹
