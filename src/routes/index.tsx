@@ -48,96 +48,143 @@ function Home() {
     <div className="min-h-screen">
       <SiteHeader />
 
-      <main className="mx-auto max-w-6xl px-6 pb-24">
-        {/* Hero */}
-        <section className="relative pt-16 pb-20 md:pt-24 md:pb-28">
-          <div className="absolute right-4 top-16 hidden md:block">
-            <div className="seal text-lg">{lang === "zh" ? "國學典藏" : "CLASSICS"}</div>
-          </div>
-          <p className="text-sm tracking-[0.4em] text-bronze mb-6">XIÈ · TIĀN · DÌ</p>
-          <h1 className="brand-title text-6xl md:text-8xl font-normal text-foreground leading-tight">
-            {lang === "zh" ? "謝天地的修道丹心" : "Xie Tian Di"}
-          </h1>
-          {lang === "en" && (
-            <p className="mt-3 text-2xl text-foreground/70 font-serif-tc">A Cultivator's Cinnabar Heart</p>
-          )}
-          <p className="mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground leading-relaxed">
-            {t("hero_tagline")}
-          </p>
+      <main className="pb-24">
+        {/* Hero — ink-wash landscape */}
+        <section className="relative overflow-hidden border-b border-border/60">
+          <img
+            src={heroInk}
+            alt=""
+            aria-hidden
+            width={1920}
+            height={1088}
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-70"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/45 to-background"
+          />
+          <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-20 md:pt-24 md:pb-28">
+            <p className="text-sm tracking-[0.4em] text-bronze mb-6">XIÈ · TIĀN · DÌ</p>
 
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Link
-              to="/shanhaijing"
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
-            >
-              {t("enter_collection")} · {pick(collections[0].meta.title, lang)}
-              <span aria-hidden>→</span>
-            </Link>
-            <Link
-              to="/daojia"
-              className="inline-flex items-center gap-2 rounded-md border border-primary/40 px-6 py-3 text-foreground hover:bg-primary/10 transition-colors"
-            >
-              {t("enter_collection")} · {pick(collections[1].meta.title, lang)}
-              <span aria-hidden>→</span>
-            </Link>
-          </div>
-          <div className="mt-4 text-sm text-muted-foreground">
-            {t("currently_hosting")}{" "}
-            <span className="text-foreground font-medium">{totalEpisodes}</span>{" "}
-            {t("episodes_count")} · {totalChapters} {t("chapters_count")}
+            <div className="flex items-start gap-4 md:gap-6">
+              <BrushTitle
+                name="brand"
+                label={lang === "zh" ? "謝天地的修道丹心" : "Xie Tian Di"}
+                className="text-foreground max-w-full"
+                height="clamp(3.5rem, 11vw, 8rem)"
+              />
+              <span className="seal-square mt-2 h-12 w-12 shrink-0 rotate-3 text-2xl md:h-16 md:w-16 md:text-3xl">
+                丹
+              </span>
+            </div>
+
+            {lang === "en" && (
+              <p className="mt-3 text-2xl text-foreground/70 font-serif-tc">A Cultivator's Cinnabar Heart</p>
+            )}
+            <p className="mt-6 max-w-2xl text-lg md:text-xl text-foreground/75 leading-relaxed">
+              {t("hero_tagline")}
+            </p>
+
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Link
+                to="/shanhaijing"
+                className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-3 text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+              >
+                {t("enter_collection")} · {pick(collections[0].meta.title, lang)}
+                <span aria-hidden>→</span>
+              </Link>
+              <Link
+                to="/daojia"
+                className="inline-flex items-center gap-2 rounded-md border border-primary/40 bg-background/60 px-6 py-3 text-foreground hover:bg-primary/10 transition-colors"
+              >
+                {t("enter_collection")} · {pick(collections[1].meta.title, lang)}
+                <span aria-hidden>→</span>
+              </Link>
+            </div>
+            <div className="mt-4 text-sm text-muted-foreground">
+              {t("currently_hosting")}{" "}
+              <span className="text-foreground font-medium">{totalEpisodes}</span>{" "}
+              {t("episodes_count")} · {totalChapters} {t("chapters_count")}
+            </div>
           </div>
         </section>
 
-        <Divider />
+        <div className="mx-auto max-w-6xl px-6">
+          <CloudDivider />
 
-        {collections.map((col) => (
-          <section key={col.meta.key} className="py-16">
-            <div className="mb-10">
-              <p className="text-sm tracking-widest text-bronze mb-2">
-                {pick(col.meta.index, lang)} · {col.meta.pinyin}
-              </p>
-              <h2 className="text-3xl md:text-4xl font-semibold text-foreground">
-                {pick(col.meta.title, lang)}
-              </h2>
-              <p className="mt-2 text-muted-foreground">{pick(col.meta.subtitle, lang)}</p>
-            </div>
-
-            <p className="max-w-3xl text-foreground/85 leading-loose mb-10">
-              {pick(col.meta.description, lang)}
-            </p>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {col.chapters.map((c) => (
-                <Link
-                  key={c.key}
-                  to={col.meta.href}
-                  className="scroll-card p-6 group transition-transform hover:-translate-y-1"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <p className="text-xs tracking-widest text-bronze">
-                        {pick(c.direction, lang)} · CHAPTER
+          {collections.map((col, i) => {
+            const isShj = col.meta.href === "/shanhaijing";
+            return (
+              <section key={col.meta.key} className="py-10">
+                <div className="scroll-unfold rounded-sm px-6 py-10 md:px-12 md:py-14">
+                  <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
+                    <div className="min-w-0">
+                      <p className="text-sm tracking-widest text-bronze mb-3">
+                        {pick(col.meta.index, lang)} · {col.meta.pinyin}
                       </p>
-                      <h3 className="mt-1 text-2xl font-semibold">{pick(c.name, lang)}</h3>
+                      <BrushTitle
+                        name={isShj ? "shanhaijing" : "daojia"}
+                        label={pick(col.meta.title, lang)}
+                        className="text-foreground"
+                        height="clamp(2.5rem, 7vw, 4.5rem)"
+                      />
+                      <p className="mt-3 text-muted-foreground">{pick(col.meta.subtitle, lang)}</p>
+                      <p className="mt-6 max-w-3xl text-foreground/85 leading-loose">
+                        {pick(col.meta.description, lang)}
+                      </p>
                     </div>
-                    <div className="seal text-xs h-14">{c.directionChar}</div>
+                    <img
+                      src={isShj ? inkMountains : inkClouds}
+                      alt=""
+                      aria-hidden
+                      loading="lazy"
+                      width={768}
+                      height={512}
+                      className="hidden w-56 opacity-70 mix-blend-multiply md:block lg:w-72"
+                    />
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
-                    {pick(c.intro, lang)}
-                  </p>
-                  <div className="mt-5 pt-4 border-t border-border/70 text-xs text-bronze flex items-center gap-2">
-                    {c.episodes.length} {t("episodes_count")}
-                    <span aria-hidden className="ml-auto transition-transform group-hover:translate-x-1">
-                      →
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        ))}
 
-        <Divider />
+                  <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {col.chapters.map((c) => (
+                      <Link
+                        key={c.key}
+                        to={col.meta.href}
+                        className="scroll-card p-6 group transition-transform hover:-translate-y-1"
+                      >
+                        <div className="flex items-start justify-between gap-4 mb-4">
+                          <div className="min-w-0">
+                            <p className="text-xs tracking-widest text-bronze">
+                              {pick(c.direction, lang)} · CHAPTER
+                            </p>
+                            <h3 className="mt-1 text-2xl font-semibold">{pick(c.name, lang)}</h3>
+                          </div>
+                          <span className="seal-square h-12 w-12 shrink-0 text-xl">
+                            {c.directionChar}
+                          </span>
+                        </div>
+                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
+                          {pick(c.intro, lang)}
+                        </p>
+                        <div className="mt-5 pt-4 border-t border-border/70 text-xs text-bronze flex items-center gap-2">
+                          {c.episodes.length} {t("episodes_count")}
+                          <span aria-hidden className="ml-auto transition-transform group-hover:translate-x-1">
+                            →
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                {i < collections.length - 1 && <CloudDivider />}
+              </section>
+            );
+          })}
+
+          <CloudDivider />
+        </div>
+
+        <div className="mx-auto max-w-6xl px-6">
+
 
         {/* Coming soon */}
         <section className="py-16">
