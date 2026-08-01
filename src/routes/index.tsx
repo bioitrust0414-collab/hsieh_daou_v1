@@ -224,12 +224,16 @@ export function SiteHeader() {
   return (
     <header className="border-b border-border/70 backdrop-blur bg-background/70 sticky top-0 z-10">
       <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3">
-          <span className="seal text-xs h-9">丹</span>
-          <span className="brand-title text-xl">
-            {lang === "zh" ? "謝天地的修道丹心" : "Xie Tian Di"}
-          </span>
+        <Link to="/" className="flex min-w-0 items-center gap-3">
+          <span className="seal-square h-9 w-9 shrink-0 text-base">丹</span>
+          <BrushTitle
+            name="brand"
+            label={lang === "zh" ? "謝天地的修道丹心" : "Xie Tian Di"}
+            className="hidden text-foreground sm:block"
+            height="1.6rem"
+          />
         </Link>
+
         <nav className="flex items-center gap-5 text-sm">
           <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors" activeProps={{ className: "text-foreground" }} activeOptions={{ exact: true }}>
             {t("nav_home")}
