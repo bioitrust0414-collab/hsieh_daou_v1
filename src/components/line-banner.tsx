@@ -10,9 +10,13 @@ export function LineBanner() {
   return (
     <section className="mx-auto max-w-6xl px-6 pb-10">
       <div className="scroll-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-4 p-5 sm:flex sm:justify-between">
-        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[#06C755] text-sm font-bold text-white">
+        <div
+          className="grid h-12 w-12 shrink-0 place-items-center rounded-xl text-sm font-bold text-background"
+          style={{ backgroundColor: "#06C755" }}
+        >
           LINE
         </div>
+
         <p className="min-w-0 text-sm leading-relaxed text-foreground/85 sm:flex-1 sm:px-4">
           {lang === "zh"
             ? "加入 LINE 好友，第一時間獲知最新講演資訊"
