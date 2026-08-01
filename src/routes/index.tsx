@@ -208,9 +208,12 @@ function Home() {
             ))}
           </div>
         </section>
+        </div>
       </main>
 
+      <LineBanner />
       <SiteFooter />
+
     </div>
   );
 }
