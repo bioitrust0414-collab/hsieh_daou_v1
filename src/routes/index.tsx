@@ -302,14 +302,22 @@ export function SiteFooter() {
   );
 }
 
-function Divider() {
+/** Cloud-motif (雲紋) decorative divider */
+function CloudDivider() {
   return (
-    <div className="divider-ornament">
-      <span className="h-px flex-1 bg-border" />
-      <span aria-hidden>❦</span>
-      <span className="h-px flex-1 bg-border" />
+    <div className="divider-cloud" aria-hidden>
+      <span className="divider-line" />
+      <svg viewBox="0 0 240 40" className="h-8 w-40 shrink-0 text-bronze/70" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+        <path d="M10 26c14 0 18-10 30-10s16 10 30 10" />
+        <path d="M70 26c14 0 18-14 34-14s22 14 36 14" />
+        <path d="M140 26c14 0 18-10 30-10s16 10 30 10" />
+        <path d="M104 22c0-6 5-9 9-6s2 9-3 9-6-4-3-7" />
+        <path d="M6 30h228" strokeOpacity="0.4" />
+      </svg>
+      <span className="divider-line" />
     </div>
   );
 }
+
 
 export { LangProvider };
