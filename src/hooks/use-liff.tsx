@@ -8,7 +8,7 @@ interface LiffProfile {
   statusMessage?: string;
 }
 
-interface UseLiffReturn {
+export interface UseLiffReturn {
   isInitialized: boolean;
   isInLineApp: boolean;
   profile: LiffProfile | null;
