@@ -2,6 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { LangProvider, useLang, useT, pick, type Lang } from "@/lib/i18n";
 import { collections } from "@/content/collections";
 import { useLiffContext } from "@/components/liff-provider";
+import { BrushTitle } from "@/components/brush-title";
+import { LineBanner } from "@/components/line-banner";
+import heroInk from "@/assets/hero-ink.jpg";
+import inkMountains from "@/assets/ink-mountains.png";
+import inkClouds from "@/assets/ink-clouds.png";
 
 // LINE OA add-friend link for @297yfqpc
 const LINE_OA_FRIEND_URL = "https://line.me/R/ti/p/@297yfqpc";
