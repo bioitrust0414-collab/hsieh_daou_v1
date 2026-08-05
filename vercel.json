@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "line-webhook/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/webhook",
+      "dest": "/line-webhook/index.js"
+    },
+    {
+      "src": "/push-article",
+      "dest": "/line-webhook/index.js"
+    },
+    {
+      "src": "/health",
+      "dest": "/line-webhook/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "LINE_CHANNEL_ACCESS_TOKEN": "@line_channel_access_token",
+    "LINE_CHANNEL_SECRET": "@line_channel_secret",
+    "VITE_LIFF_ID": "@vite_liff_id",
+    "PUSH_SECRET": "@push_secret",
+    "SITE_URL": "@site_url"
+  }
+}
