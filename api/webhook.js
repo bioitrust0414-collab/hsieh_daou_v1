@@ -19,7 +19,7 @@ app.use(express.json());
 // ── 環境變數 ──────────────────────────────────────────────
 const LINE_CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
 const LINE_CHANNEL_SECRET       = process.env.LINE_CHANNEL_SECRET;
-const SITE_URL                  = process.env.SITE_URL || 'https://xietiandide.com';
+const SITE_URL                  = process.env.SITE_URL || 'https://daou.veridiangold.com';
 const LIFF_ID                   = process.env.VITE_LIFF_ID || '2010848952-VfGV0qlc';
 const LIFF_URL                  = `https://liff.line.me/${LIFF_ID}`;
 
