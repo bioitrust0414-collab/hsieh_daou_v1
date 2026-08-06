@@ -270,8 +270,6 @@ const socialLinkClassName =
 export function SiteFooter() {
   const { lang } = useLang();
   const t = useT();
-  const { loginAndOpen } = useLiffContext();
-
   return (
     <footer className="border-t border-border/70 mt-12">
       <div className="mx-auto max-w-6xl px-6 py-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -292,14 +290,15 @@ export function SiteFooter() {
               {s.label}
             </a>
           ))}
-          <button
-            type="button"
-            onClick={() => loginAndOpen(LINE_OA_FRIEND_URL)}
+          <a
+            href={LINE_OA_FRIEND_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             aria-label="LINE"
             className={socialLinkClassName}
           >
             LINE
-          </button>
+          </a>
         </div>
       </div>
     </footer>
