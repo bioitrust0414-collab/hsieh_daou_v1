@@ -94,12 +94,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "謝天地的修道丹心 · 國學典籍講演筆記" },
       { name: "twitter:description", content: "謝天地的修道丹心：以講演筆記形式重構《山海經》等國學典籍，從地理、動物、植物、醫藥到神話，逐篇解構華夏先民的世界觀。" },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2004a04b-aee4-44f7-ae5f-4339c51e4bd5/id-preview-b1bb4a14--5edc047b-0ed7-47aa-91e1-3eec59f68693.lovable.app-1783745293250.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2004a04b-aee4-44f7-ae5f-4339c51e4bd5/id-preview-b1bb4a14--5edc047b-0ed7-47aa-91e1-3eec59f68693.lovable.app-1783745293250.png" },
+      { property: "og:image", content: "/favicon.svg" },
+      { name: "twitter:image", content: "/favicon.svg" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "shortcut icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       {
         rel: "preconnect",
