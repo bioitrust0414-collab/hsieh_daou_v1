@@ -1,25 +1,63 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { findEpisode, allEpisodes, type Episode, type Chapter } from "@/content/shanhaijing";
+import {
+  chapters,
+  findEpisode,
+  allEpisodes,
+  type Episode,
+  type Chapter,
+} from "@/content/shanhaijing";
 import { useLang, useT, pick } from "@/lib/i18n";
+import { type PublishedArticle, getPublishedShanhaijingArticle } from "@/lib/published-articles";
 import { LangProvider } from "./index";
 
+type EpisodeLoaderData =
+  | { kind: "static"; episode: Episode; chapter: Chapter }
+  | { kind: "published"; article: PublishedArticle };
+
 export const Route = createFileRoute("/shanhaijing/$slug")({
-  loader: ({ params }) => {
+  loader: async ({ params }): Promise<EpisodeLoaderData> => {
+    const publishedArticle = await getPublishedShanhaijingArticle(params.slug);
+    if (publishedArticle) return { kind: "published", article: publishedArticle };
+
     const found = findEpisode(params.slug);
     if (!found) throw notFound();
-    return found;
+    return { kind: "static", ...found };
   },
   head: ({ loaderData }) => {
     if (!loaderData) return { meta: [{ title: "篇章未找到" }] };
+
+    if (loaderData.kind === "published") {
+      const { article } = loaderData;
+      const description = (
+        article.summary_zh ??
+        article.sections[0]?.body[0] ??
+        article.subtitle_zh ??
+        ""
+      ).slice(0, 155);
+      const title = `${article.title_zh} · 山海經`;
+      return {
+        meta: [
+          { title },
+          { name: "description", content: description },
+          { property: "og:title", content: title },
+          { property: "og:description", content: description },
+          { property: "og:type", content: "article" },
+        ],
+      };
+    }
+
     const { episode, chapter } = loaderData;
     const title = `${episode.title.zh} · ${chapter.name.zh} · 山海經`;
-    const desc = `${episode.subtitle.zh}。${episode.sections[0]?.body.zh[0] ?? ""}`.slice(0, 155);
+    const description = `${episode.subtitle.zh}。${episode.sections[0]?.body.zh[0] ?? ""}`.slice(
+      0,
+      155,
+    );
     return {
       meta: [
         { title },
-        { name: "description", content: desc },
+        { name: "description", content: description },
         { property: "og:title", content: title },
-        { property: "og:description", content: desc },
+        { property: "og:description", content: description },
         { property: "og:type", content: "article" },
       ],
     };
@@ -43,7 +81,10 @@ function NotFoundView() {
     <main className="mx-auto max-w-3xl px-6 py-24 text-center">
       <h1 className="text-3xl font-semibold">{t("not_found_title")}</h1>
       <p className="mt-4 text-muted-foreground">{t("not_found_desc")}</p>
-      <Link to="/shanhaijing" className="mt-6 inline-block text-bronze underline underline-offset-4">
+      <Link
+        to="/shanhaijing"
+        className="mt-6 inline-block text-bronze underline underline-offset-4"
+      >
         {t("back_to")}
       </Link>
     </main>
@@ -56,7 +97,10 @@ function ErrorView({ error, reset }: { error: Error; reset: () => void }) {
     <main className="mx-auto max-w-3xl px-6 py-24 text-center">
       <h1 className="text-2xl font-semibold">{t("load_failed")}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
-      <button onClick={reset} className="mt-6 inline-block rounded-md bg-primary px-4 py-2 text-primary-foreground">
+      <button
+        onClick={reset}
+        className="mt-6 inline-block rounded-md bg-primary px-4 py-2 text-primary-foreground"
+      >
         {t("retry")}
       </button>
     </main>
@@ -64,38 +108,59 @@ function ErrorView({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 function EpisodePage() {
-  const { episode, chapter } = Route.useLoaderData() as { episode: Episode; chapter: Chapter };
+  const data = Route.useLoaderData() as EpisodeLoaderData;
+  return data.kind === "published" ? (
+    <PublishedEpisodePage article={data.article} />
+  ) : (
+    <StaticEpisodePage {...data} />
+  );
+}
+
+function PublishedEpisodePage({ article }: { article: PublishedArticle }) {
   const { lang } = useLang();
   const t = useT();
-
-  const idx = allEpisodes.findIndex((e) => e.slug === episode.slug);
-  const prev = idx > 0 ? allEpisodes[idx - 1] : null;
-  const next = idx < allEpisodes.length - 1 ? allEpisodes[idx + 1] : null;
+  const chapter = chapters.find((candidate) => candidate.key === article.chapter_key);
+  const chapterName = chapter ? pick(chapter.name, lang) : "山海經";
+  const directionChar = chapter?.directionChar ?? "典";
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
       <nav className="text-sm text-muted-foreground mb-8 flex items-center gap-2">
-        <Link to="/" className="hover:text-foreground">{t("nav_home")}</Link>
+        <Link to="/" className="hover:text-foreground">
+          {t("nav_home")}
+        </Link>
         <span>／</span>
-        <Link to="/shanhaijing" className="hover:text-foreground">{t("nav_shanhaijing")}</Link>
+        <Link to="/shanhaijing" className="hover:text-foreground">
+          {t("nav_shanhaijing")}
+        </Link>
         <span>／</span>
-        <span className="text-foreground/80">{pick(chapter.name, lang)}</span>
+        <span className="text-foreground/80">{chapterName}</span>
       </nav>
 
       <header className="mb-12">
         <div className="flex items-center gap-3 mb-6">
-          <div className="seal text-xs h-12">{chapter.directionChar}</div>
+          <div className="seal text-xs h-12">{directionChar}</div>
           <div>
             <div className="text-xs tracking-widest text-bronze">
-              {episode.ep} · {pick(chapter.name, lang)} · {episode.chapterPinyin}
+              完整講演 · {article.episode} · {chapterName}
             </div>
           </div>
         </div>
-        <h1 className="text-4xl md:text-5xl font-semibold leading-tight">{pick(episode.title, lang)}</h1>
-        <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{pick(episode.subtitle, lang)}</p>
+        <h1 className="text-4xl md:text-5xl font-semibold leading-tight">{article.title_zh}</h1>
+        {article.subtitle_zh && (
+          <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
+            {article.subtitle_zh}
+          </p>
+        )}
         <div className="mt-6 flex flex-wrap gap-2">
-          {pick(episode.tags, lang).map((tag) => (
-            <span key={tag} className="text-xs px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground border border-border">
+          <span className="text-xs px-2.5 py-1 rounded-full border border-bronze/50 text-bronze">
+            新卷 · 完整講演
+          </span>
+          {article.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-xs px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground border border-border"
+            >
               {tag}
             </span>
           ))}
@@ -109,16 +174,112 @@ function EpisodePage() {
       </div>
 
       <article className="space-y-10">
-        {episode.sections.map((s, i) => (
-          <section key={i}>
+        {article.sections.map((section, index) => (
+          <section key={`${section.heading}-${index}`}>
             <h2 className="text-2xl font-semibold mb-4 text-foreground flex items-baseline gap-3">
-              <span className="text-bronze text-sm tracking-widest">{String(i + 1).padStart(2, "0")}</span>
-              {pick(s.heading, lang)}
+              <span className="text-bronze text-sm tracking-widest">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              {section.heading}
             </h2>
             <div className="space-y-4">
-              {pick(s.body, lang).map((p, j) => (
-                <p key={j} className="text-foreground/90 leading-loose text-[17px]" style={{ textIndent: "2em" }}>
-                  {p}
+              {section.body.map((paragraph, paragraphIndex) => (
+                <p
+                  key={paragraphIndex}
+                  className="text-foreground/90 leading-loose text-[17px] whitespace-pre-wrap"
+                  style={{ textIndent: "2em" }}
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </section>
+        ))}
+      </article>
+
+      <nav className="mt-16 pt-8 border-t border-border">
+        <Link to="/shanhaijing" className="scroll-card inline-flex p-4 group">
+          <span className="text-xs text-bronze tracking-widest">← {t("back_to")}</span>
+          <span className="ml-3 font-semibold group-hover:text-bronze transition-colors">
+            山海經典藏目錄
+          </span>
+        </Link>
+      </nav>
+    </main>
+  );
+}
+
+function StaticEpisodePage({ episode, chapter }: { episode: Episode; chapter: Chapter }) {
+  const { lang } = useLang();
+  const t = useT();
+  const index = allEpisodes.findIndex((item) => item.slug === episode.slug);
+  const previous = index > 0 ? allEpisodes[index - 1] : null;
+  const next = index < allEpisodes.length - 1 ? allEpisodes[index + 1] : null;
+
+  return (
+    <main className="mx-auto max-w-3xl px-6 py-16">
+      <nav className="text-sm text-muted-foreground mb-8 flex items-center gap-2">
+        <Link to="/" className="hover:text-foreground">
+          {t("nav_home")}
+        </Link>
+        <span>／</span>
+        <Link to="/shanhaijing" className="hover:text-foreground">
+          {t("nav_shanhaijing")}
+        </Link>
+        <span>／</span>
+        <span className="text-foreground/80">{pick(chapter.name, lang)}</span>
+      </nav>
+
+      <header className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="seal text-xs h-12">{chapter.directionChar}</div>
+          <div>
+            <div className="text-xs tracking-widest text-bronze">
+              {episode.ep} · {pick(chapter.name, lang)} · {episode.chapterPinyin}
+            </div>
+          </div>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-semibold leading-tight">
+          {pick(episode.title, lang)}
+        </h1>
+        <p className="mt-4 text-lg text-muted-foreground leading-relaxed">
+          {pick(episode.subtitle, lang)}
+        </p>
+        <div className="mt-6 flex flex-wrap gap-2">
+          {pick(episode.tags, lang).map((tag) => (
+            <span
+              key={tag}
+              className="text-xs px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground border border-border"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </header>
+
+      <div className="divider-ornament mb-12">
+        <span className="h-px flex-1 bg-border" />
+        <span aria-hidden>❦</span>
+        <span className="h-px flex-1 bg-border" />
+      </div>
+
+      <article className="space-y-10">
+        {episode.sections.map((section, sectionIndex) => (
+          <section key={sectionIndex}>
+            <h2 className="text-2xl font-semibold mb-4 text-foreground flex items-baseline gap-3">
+              <span className="text-bronze text-sm tracking-widest">
+                {String(sectionIndex + 1).padStart(2, "0")}
+              </span>
+              {pick(section.heading, lang)}
+            </h2>
+            <div className="space-y-4">
+              {pick(section.body, lang).map((paragraph, paragraphIndex) => (
+                <p
+                  key={paragraphIndex}
+                  className="text-foreground/90 leading-loose text-[17px]"
+                  style={{ textIndent: "2em" }}
+                >
+                  {paragraph}
                 </p>
               ))}
             </div>
@@ -134,18 +295,38 @@ function EpisodePage() {
       )}
 
       <nav className="mt-16 pt-8 border-t border-border grid gap-4 md:grid-cols-2">
-        {prev ? (
-          <Link to="/shanhaijing/$slug" params={{ slug: prev.slug }} className="scroll-card p-4 group">
-            <div className="text-xs text-bronze tracking-widest">← {t("prev_ep")} · {prev.ep}</div>
-            <div className="mt-1 font-semibold group-hover:text-bronze transition-colors">{pick(prev.title, lang)}</div>
+        {previous ? (
+          <Link
+            to="/shanhaijing/$slug"
+            params={{ slug: previous.slug }}
+            className="scroll-card p-4 group"
+          >
+            <div className="text-xs text-bronze tracking-widest">
+              ← {t("prev_ep")} · {previous.ep}
+            </div>
+            <div className="mt-1 font-semibold group-hover:text-bronze transition-colors">
+              {pick(previous.title, lang)}
+            </div>
           </Link>
-        ) : <div />}
+        ) : (
+          <div />
+        )}
         {next ? (
-          <Link to="/shanhaijing/$slug" params={{ slug: next.slug }} className="scroll-card p-4 text-right group">
-            <div className="text-xs text-bronze tracking-widest">{t("next_ep")} · {next.ep} →</div>
-            <div className="mt-1 font-semibold group-hover:text-bronze transition-colors">{pick(next.title, lang)}</div>
+          <Link
+            to="/shanhaijing/$slug"
+            params={{ slug: next.slug }}
+            className="scroll-card p-4 text-right group"
+          >
+            <div className="text-xs text-bronze tracking-widest">
+              {t("next_ep")} · {next.ep} →
+            </div>
+            <div className="mt-1 font-semibold group-hover:text-bronze transition-colors">
+              {pick(next.title, lang)}
+            </div>
           </Link>
-        ) : <div />}
+        ) : (
+          <div />
+        )}
       </nav>
     </main>
   );
