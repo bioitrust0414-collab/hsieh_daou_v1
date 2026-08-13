@@ -120,6 +120,43 @@ export async function getPublishedShanhaijingArticle(
   return data ? normaliseArticle(data as ArticleRow) : null;
 }
 
+export type ExtendedShanhaijingChapter = {
+  key: "haiwai" | "hainei" | "dahuang";
+  directionChar: string;
+  direction: string;
+  name: string;
+  intro: string;
+};
+
+/** 中山經下卷沿用既有中山經區塊；其餘三類為新增典藏區塊。 */
+export function getShanhaijingChapterGroup(chapterKey: string | null): string {
+  return chapterKey === "zhongshan" ? "zhong" : (chapterKey ?? "");
+}
+
+export const extendedShanhaijingChapters: ExtendedShanhaijingChapter[] = [
+  {
+    key: "haiwai",
+    directionChar: "海",
+    direction: "海外",
+    name: "海外經",
+    intro: "跨越四方邊界，異人、奇國與神祇共同展開對遙遠世界的想像。",
+  },
+  {
+    key: "hainei",
+    directionChar: "內",
+    direction: "海內",
+    name: "海內經",
+    intro: "回到已知疆域，山川、神話地理與文明起源交織成華夏世界的內在圖景。",
+  },
+  {
+    key: "dahuang",
+    directionChar: "荒",
+    direction: "大荒",
+    name: "大荒經",
+    intro: "以大荒為舞台，追索日月、神人、族群與天地秩序的宇宙神話。",
+  },
+];
+
 export function articleReadingLabel(article: PublishedArticle): string {
   const sectionCount = article.sections.length;
   return sectionCount > 0 ? `完整講演 · ${sectionCount} 節` : "完整講演";

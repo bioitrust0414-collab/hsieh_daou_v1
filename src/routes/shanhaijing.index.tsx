@@ -2,7 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { chapters, collectionMeta } from "@/content/shanhaijing";
 import { useLang, useT, pick } from "@/lib/i18n";
 import { BrushTitle } from "@/components/brush-title";
-import { articleReadingLabel, getPublishedShanhaijingArticles } from "@/lib/published-articles";
+import {
+  articleReadingLabel,
+  extendedShanhaijingChapters,
+  getPublishedShanhaijingArticles,
+  getShanhaijingChapterGroup,
+  type PublishedArticle,
+} from "@/lib/published-articles";
 
 export const Route = createFileRoute("/shanhaijing/")({
   loader: async () => ({ publishedArticles: await getPublishedShanhaijingArticles() }),
@@ -19,6 +25,43 @@ export const Route = createFileRoute("/shanhaijing/")({
   }),
   component: ShanhaijingIndex,
 });
+
+function PublishedLectureCard({ article }: { article: PublishedArticle }) {
+  return (
+    <Link
+      to="/shanhaijing/$slug"
+      params={{ slug: article.slug }}
+      className="scroll-card p-6 group transition-transform hover:-translate-y-1 border-bronze/40 bg-card/70"
+    >
+      <div className="flex items-center justify-between text-xs text-bronze tracking-widest mb-3">
+        <span className="rounded-sm border border-bronze/50 px-2 py-1 text-[10px] font-semibold">
+          新卷 · 完整講演
+        </span>
+        <span>{article.episode}</span>
+      </div>
+      <h3 className="text-xl font-semibold leading-snug">{article.title_zh}</h3>
+      {article.subtitle_zh && (
+        <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{article.subtitle_zh}</p>
+      )}
+      <div className="mt-4 flex flex-wrap gap-2">
+        {article.tags.map((tag) => (
+          <span
+            key={tag}
+            className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground border border-border"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+      <div className="mt-5 pt-3 border-t border-border/70 text-xs text-bronze flex items-center">
+        <span>{articleReadingLabel(article)}</span>
+        <span aria-hidden className="ml-auto transition-transform group-hover:translate-x-1">
+          →
+        </span>
+      </div>
+    </Link>
+  );
+}
 
 function ShanhaijingIndex() {
   const { lang } = useLang();
@@ -46,7 +89,7 @@ function ShanhaijingIndex() {
       <div className="space-y-16">
         {chapters.map((chapter) => {
           const publishedForChapter = publishedArticles.filter(
-            (article) => article.chapter_key === chapter.key,
+            (article) => getShanhaijingChapterGroup(article.chapter_key) === chapter.key,
           );
 
           return (
@@ -105,46 +148,37 @@ function ShanhaijingIndex() {
                     </div>
                   </Link>
                 ))}
-
                 {publishedForChapter.map((article) => (
-                  <Link
-                    key={article.id}
-                    to="/shanhaijing/$slug"
-                    params={{ slug: article.slug }}
-                    className="scroll-card p-6 group transition-transform hover:-translate-y-1 border-bronze/40 bg-card/70"
-                  >
-                    <div className="flex items-center justify-between text-xs text-bronze tracking-widest mb-3">
-                      <span className="rounded-sm border border-bronze/50 px-2 py-1 text-[10px] font-semibold">
-                        新卷 · 完整講演
-                      </span>
-                      <span>{article.episode}</span>
-                    </div>
-                    <h3 className="text-xl font-semibold leading-snug">{article.title_zh}</h3>
-                    {article.subtitle_zh && (
-                      <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                        {article.subtitle_zh}
-                      </p>
-                    )}
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {article.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground border border-border"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="mt-5 pt-3 border-t border-border/70 text-xs text-bronze flex items-center">
-                      <span>{articleReadingLabel(article)}</span>
-                      <span
-                        aria-hidden
-                        className="ml-auto transition-transform group-hover:translate-x-1"
-                      >
-                        →
-                      </span>
-                    </div>
-                  </Link>
+                  <PublishedLectureCard key={article.id} article={article} />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+
+        {extendedShanhaijingChapters.map((chapter) => {
+          const publishedForChapter = publishedArticles.filter(
+            (article) => getShanhaijingChapterGroup(article.chapter_key) === chapter.key,
+          );
+          if (publishedForChapter.length === 0) return null;
+
+          return (
+            <section key={chapter.key} id={chapter.key}>
+              <div className="flex items-center gap-4 mb-6">
+                <span className="seal-square h-14 w-14 shrink-0 text-2xl">
+                  {chapter.directionChar}
+                </span>
+                <div>
+                  <div className="text-xs tracking-widest text-bronze">{chapter.direction}</div>
+                  <h2 className="text-3xl font-semibold">{chapter.name}</h2>
+                </div>
+              </div>
+              <p className="text-foreground/80 leading-loose max-w-3xl mb-8 pl-1">
+                {chapter.intro}
+              </p>
+              <div className="grid gap-5 md:grid-cols-2">
+                {publishedForChapter.map((article) => (
+                  <PublishedLectureCard key={article.id} article={article} />
                 ))}
               </div>
             </section>

@@ -7,7 +7,12 @@ import {
   type Chapter,
 } from "@/content/shanhaijing";
 import { useLang, useT, pick } from "@/lib/i18n";
-import { type PublishedArticle, getPublishedShanhaijingArticle } from "@/lib/published-articles";
+import {
+  extendedShanhaijingChapters,
+  getShanhaijingChapterGroup,
+  getPublishedShanhaijingArticle,
+  type PublishedArticle,
+} from "@/lib/published-articles";
 import { LangProvider } from "./index";
 
 type EpisodeLoaderData =
@@ -119,9 +124,13 @@ function EpisodePage() {
 function PublishedEpisodePage({ article }: { article: PublishedArticle }) {
   const { lang } = useLang();
   const t = useT();
-  const chapter = chapters.find((candidate) => candidate.key === article.chapter_key);
-  const chapterName = chapter ? pick(chapter.name, lang) : "山海經";
-  const directionChar = chapter?.directionChar ?? "典";
+  const chapterGroup = getShanhaijingChapterGroup(article.chapter_key);
+  const chapter = chapters.find((candidate) => candidate.key === chapterGroup);
+  const extendedChapter = extendedShanhaijingChapters.find(
+    (candidate) => candidate.key === chapterGroup,
+  );
+  const chapterName = chapter ? pick(chapter.name, lang) : (extendedChapter?.name ?? "山海經");
+  const directionChar = chapter?.directionChar ?? extendedChapter?.directionChar ?? "典";
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
