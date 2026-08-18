@@ -148,3 +148,18 @@ Vercel 已連接本 Repository 的 `main` 分支。每次推送會觸發部署�
 ## 授權
 
 © 2026 謝天地的修道丹心。除非另有書面授權，內容與設計均保留所有權利。
+
+## Vercel 部署資訊
+
+以下資訊依 2026-08-19 提供的 Vercel Projects 截圖整理：
+
+| 項目 | 資訊 |
+|---|---|
+| Vercel Project | `hsieh-daou-v1` |
+| GitHub Repository | [`bioitrust0414-collab/hsieh_daou_v1`](https://github.com/bioitrust0414-collab/hsieh_daou_v1) |
+| Production domain | [daou.veridiangold.com](https://daou.veridiangold.com) |
+| 用途 | 「謝天地的修道丹心」公開網站、會員入口、LINE LIFF 與內容發布端 |
+
+Vercel 由 GitHub `main` 分支自動部署。Production 與 Preview 環境應分別設定 `VITE_SUPABASE_URL`、`VITE_SUPABASE_PUBLISHABLE_KEY` 及 server-side 的 LINE channel secrets、`PUSH_SECRET` 與 `SITE_URL`。任何新文章仍須先經 Supabase `review`，再轉為 `published`／`public`，不應以直接推送程式碼取代內容審核流程。
+
+> 網域與 project mapping 依使用者提供的 Vercel Projects 截圖記錄；若 Vercel 後台後續改名或更換 domain，應同步更新本節。
