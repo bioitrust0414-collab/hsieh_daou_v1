@@ -46,11 +46,11 @@ CREATE POLICY "audio_tracks public read" ON public.audio_tracks
 INSERT INTO public.audio_tracks
   (element_key, glyph, title_zh, title_en, tone_zh, tone_en, note_zh, note_en, storage_path, sort_order)
 VALUES
-  ('wood',  '木', '木', 'Wood',  '角音', 'Jue Tone',   '調肝舒鬱，生發之氣，宜於清晨行功。', 'Frees the liver qi; best at dawn.',       'wuxing/wood.mp3',  1),
-  ('fire',  '火', '火', 'Fire',  '徵音', 'Zhi Tone',   '通心養神，火候溫養，宜於午時靜坐。', 'Warms the heart-spirit; best at noon.',    'wuxing/fire.mp3',  2),
-  ('earth', '土', '土', 'Earth', '宮音', 'Gong Tone',  '培中固脾，安定中宮，宜於飯後調息。', 'Anchors the centre; best after meals.',    'wuxing/earth.mp3', 3),
-  ('metal', '金', '金', 'Metal', '商音', 'Shang Tone', '肅肺理氣，收斂清降，宜於黃昏吐納。', 'Clears the lungs; best at dusk.',          'wuxing/metal.mp3', 4),
-  ('water', '水', '水', 'Water', '羽音', 'Yu Tone',    '滋腎藏精，水火既濟，宜於子時塞兌。', 'Nourishes the kidneys; best at midnight.', 'wuxing/water.mp3', 5)
+  ('wood',  '木', '木', 'Wood',  '角音', 'Jue Tone',   '調肝舒鬱，生發之氣，宜於清晨行功。', 'Frees the liver qi; best at dawn.',       'natural_wood_neutral_short_2026_08.mp3',  1),
+  ('fire',  '火', '火', 'Fire',  '徵音', 'Zhi Tone',   '通心養神，火候溫養，宜於午時靜坐。', 'Warms the heart-spirit; best at noon.',    'natural_fire_neutral_short_2026_08.mp3',  2),
+  ('earth', '土', '土', 'Earth', '宮音', 'Gong Tone',  '培中固脾，安定中宮，宜於飯後調息。', 'Anchors the centre; best after meals.',    'natural_earth_neutral_short_2026_08.mp3', 3),
+  ('metal', '金', '金', 'Metal', '商音', 'Shang Tone', '肅肺理氣，收斂清降，宜於黃昏吐納。', 'Clears the lungs; best at dusk.',          'natural_metal_neutral_short_2026_08.mp3', 4),
+  ('water', '水', '水', 'Water', '羽音', 'Yu Tone',    '滋腎藏精，水火既濟，宜於子時塞兌。', 'Nourishes the kidneys; best at midnight.', 'natural_water_neutral_short_2026_08.mp3', 5)
 ON CONFLICT (element_key) DO UPDATE SET
   glyph = EXCLUDED.glyph,
   title_zh = EXCLUDED.title_zh,

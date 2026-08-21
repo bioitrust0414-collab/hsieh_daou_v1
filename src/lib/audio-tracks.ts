@@ -24,11 +24,11 @@ export type AudioTrack = {
 export const AUDIO_BUCKET = "audio";
 
 export const AUDIO_FILES: Record<ElementKey, { storagePath: string; fallbackUrl: string }> = {
-  wood: { storagePath: "wuxing/wood.mp3", fallbackUrl: woodAsset.url },
-  fire: { storagePath: "wuxing/fire.mp3", fallbackUrl: fireAsset.url },
-  earth: { storagePath: "wuxing/earth.mp3", fallbackUrl: earthAsset.url },
-  metal: { storagePath: "wuxing/metal.mp3", fallbackUrl: metalAsset.url },
-  water: { storagePath: "wuxing/water.mp3", fallbackUrl: waterAsset.url },
+  wood: { storagePath: "natural_wood_neutral_short_2026_08.mp3", fallbackUrl: woodAsset.url },
+  fire: { storagePath: "natural_fire_neutral_short_2026_08.mp3", fallbackUrl: fireAsset.url },
+  earth: { storagePath: "natural_earth_neutral_short_2026_08.mp3", fallbackUrl: earthAsset.url },
+  metal: { storagePath: "natural_metal_neutral_short_2026_08.mp3", fallbackUrl: metalAsset.url },
+  water: { storagePath: "natural_water_neutral_short_2026_08.mp3", fallbackUrl: waterAsset.url },
 };
 
 const META: Record<ElementKey, Omit<AudioTrack, "url" | "source">> = {

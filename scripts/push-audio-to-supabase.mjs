@@ -7,12 +7,20 @@
  *   node scripts/push-audio-to-supabase.mjs
  *
  * 音檔來源為專案 CDN（src/assets/audio/*.asset.json），亦可用 --dir=/path/to/mp3
- * 指定本機資料夾（檔名需為 wood.mp3 / fire.mp3 / earth.mp3 / metal.mp3 / water.mp3）。
+ * 指定本機資料夾（檔名需為 STORAGE_NAMES 對應的原始檔名）。
  */
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 const ELEMENTS = ["wood", "fire", "earth", "metal", "water"];
+// Storage 內的實際檔名（bucket 根目錄，非 wuxing/ 子資料夾），需與 audio_tracks.storage_path 一致
+const STORAGE_NAMES = {
+  wood: "natural_wood_neutral_short_2026_08.mp3",
+  fire: "natural_fire_neutral_short_2026_08.mp3",
+  earth: "natural_earth_neutral_short_2026_08.mp3",
+  metal: "natural_metal_neutral_short_2026_08.mp3",
+  water: "natural_water_neutral_short_2026_08.mp3",
+};
 const CDN_BASE = process.env.CDN_BASE ?? "https://daou.lovable.app";
 const BUCKET = "audio";
 
@@ -39,7 +47,7 @@ async function loadBytes(element) {
 
 for (const element of ELEMENTS) {
   const bytes = await loadBytes(element);
-  const target = `${SUPABASE_URL}/storage/v1/object/${BUCKET}/wuxing/${element}.mp3`;
+  const target = `${SUPABASE_URL}/storage/v1/object/${BUCKET}/${STORAGE_NAMES[element]}`;
   const res = await fetch(target, {
     method: "POST",
     headers: {
