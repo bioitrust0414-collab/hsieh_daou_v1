@@ -4,6 +4,8 @@ import { collections } from "@/content/collections";
 import { useLiffContext } from "@/components/liff-provider";
 import { BrushTitle } from "@/components/brush-title";
 import { LineBanner } from "@/components/line-banner";
+import { FiveTonePlayer } from "@/components/five-tone-player";
+
 import heroInk from "@/assets/hero-ink.jpg";
 import inkMountains from "@/assets/ink-mountains.png";
 import inkClouds from "@/assets/ink-clouds.png";
