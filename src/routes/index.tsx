@@ -185,8 +185,12 @@ function Home() {
 
         <div className="mx-auto max-w-6xl px-6">
 
+        <FiveTonePlayer />
+
+        <CloudDivider />
 
         {/* Coming soon */}
+
         <section className="py-16">
           <p className="text-sm tracking-widest text-bronze mb-3">{t("coming_soon_label")}</p>
           <h2 className="text-2xl md:text-3xl font-semibold mb-6">{t("coming_soon_title")}</h2>
