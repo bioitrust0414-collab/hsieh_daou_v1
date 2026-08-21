@@ -94,7 +94,7 @@ export async function getPublishedShanhaijingArticles(): Promise<PublishedArticl
     return [];
   }
 
-  return (data as ArticleRow[]).map(normaliseArticle);
+  return (data as unknown as ArticleRow[]).map(normaliseArticle);
 }
 
 export async function getPublishedShanhaijingArticle(
@@ -117,7 +117,7 @@ export async function getPublishedShanhaijingArticle(
     return null;
   }
 
-  return data ? normaliseArticle(data as ArticleRow) : null;
+  return data ? normaliseArticle(data as unknown as ArticleRow) : null;
 }
 
 export type ExtendedShanhaijingChapter = {

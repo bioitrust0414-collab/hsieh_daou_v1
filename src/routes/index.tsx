@@ -4,6 +4,8 @@ import { collections } from "@/content/collections";
 import { useLiffContext } from "@/components/liff-provider";
 import { BrushTitle } from "@/components/brush-title";
 import { LineBanner } from "@/components/line-banner";
+import { FiveTonePlayer } from "@/components/five-tone-player";
+
 import heroInk from "@/assets/hero-ink.jpg";
 import inkMountains from "@/assets/ink-mountains.png";
 import inkClouds from "@/assets/ink-clouds.png";
@@ -185,8 +187,12 @@ function Home() {
 
         <div className="mx-auto max-w-6xl px-6">
 
+        <FiveTonePlayer />
+
+        <CloudDivider />
 
         {/* Coming soon */}
+
         <section className="py-16">
           <p className="text-sm tracking-widest text-bronze mb-3">{t("coming_soon_label")}</p>
           <h2 className="text-2xl md:text-3xl font-semibold mb-6">{t("coming_soon_title")}</h2>
