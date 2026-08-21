@@ -9,17 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as DaojiaRouteImport } from './routes/daojia'
 import { Route as ShanhaijingRouteImport } from './routes/shanhaijing'
-import { Route as DaojiaIndexRouteImport } from './routes/daojia.index'
-import { Route as DaojiaSlugRouteImport } from './routes/daojia.$slug'
+import { Route as DaojiaRouteImport } from './routes/daojia'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShanhaijingIndexRouteImport } from './routes/shanhaijing.index'
+import { Route as DaojiaIndexRouteImport } from './routes/daojia.index'
 import { Route as ShanhaijingSlugRouteImport } from './routes/shanhaijing.$slug'
+import { Route as DaojiaSlugRouteImport } from './routes/daojia.$slug'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ShanhaijingRoute = ShanhaijingRouteImport.update({
+  id: '/shanhaijing',
+  path: '/shanhaijing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DaojiaRoute = DaojiaRouteImport.update({
@@ -27,30 +27,30 @@ const DaojiaRoute = DaojiaRouteImport.update({
   path: '/daojia',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShanhaijingRoute = ShanhaijingRouteImport.update({
-  id: '/shanhaijing',
-  path: '/shanhaijing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DaojiaIndexRoute = DaojiaIndexRouteImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => DaojiaRoute,
-} as any)
-const DaojiaSlugRoute = DaojiaSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => DaojiaRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ShanhaijingIndexRoute = ShanhaijingIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ShanhaijingRoute,
 } as any)
+const DaojiaIndexRoute = DaojiaIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DaojiaRoute,
+} as any)
 const ShanhaijingSlugRoute = ShanhaijingSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => ShanhaijingRoute,
+} as any)
+const DaojiaSlugRoute = DaojiaSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => DaojiaRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -110,11 +110,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/shanhaijing': {
+      id: '/shanhaijing'
+      path: '/shanhaijing'
+      fullPath: '/shanhaijing'
+      preLoaderRoute: typeof ShanhaijingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daojia': {
@@ -124,26 +124,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DaojiaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/shanhaijing': {
-      id: '/shanhaijing'
-      path: '/shanhaijing'
-      fullPath: '/shanhaijing'
-      preLoaderRoute: typeof ShanhaijingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/daojia/': {
-      id: '/daojia/'
+    '/': {
+      id: '/'
       path: '/'
-      fullPath: '/daojia/'
-      preLoaderRoute: typeof DaojiaIndexRouteImport
-      parentRoute: typeof DaojiaRoute
-    }
-    '/daojia/$slug': {
-      id: '/daojia/$slug'
-      path: '/$slug'
-      fullPath: '/daojia/$slug'
-      preLoaderRoute: typeof DaojiaSlugRouteImport
-      parentRoute: typeof DaojiaRoute
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/shanhaijing/': {
       id: '/shanhaijing/'
@@ -152,12 +138,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShanhaijingIndexRouteImport
       parentRoute: typeof ShanhaijingRoute
     }
+    '/daojia/': {
+      id: '/daojia/'
+      path: '/'
+      fullPath: '/daojia/'
+      preLoaderRoute: typeof DaojiaIndexRouteImport
+      parentRoute: typeof DaojiaRoute
+    }
     '/shanhaijing/$slug': {
       id: '/shanhaijing/$slug'
       path: '/$slug'
       fullPath: '/shanhaijing/$slug'
       preLoaderRoute: typeof ShanhaijingSlugRouteImport
       parentRoute: typeof ShanhaijingRoute
+    }
+    '/daojia/$slug': {
+      id: '/daojia/$slug'
+      path: '/$slug'
+      fullPath: '/daojia/$slug'
+      preLoaderRoute: typeof DaojiaSlugRouteImport
+      parentRoute: typeof DaojiaRoute
     }
   }
 }
