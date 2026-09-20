@@ -174,7 +174,7 @@ export function FiveTonePlayer() {
       {current ? (
         <p className="mt-4 text-xs text-muted-foreground">
           {lang === "zh" ? "音源：" : "Source: "}
-          {current.source === "supabase" ? "Supabase Storage" : "CDN 備援"}
+          {current.source === "shared-storage" ? "共用音源（music3）" : "CDN 備援"}
           {sequencing ? (lang === "zh" ? " · 依序連播模式" : " · sequence mode") : ""}
         </p>
       ) : null}

@@ -1,4 +1,3 @@
-import { supabase } from "@/lib/supabase";
 import earthAsset from "@/assets/audio/earth.mp3.asset.json";
 import fireAsset from "@/assets/audio/fire.mp3.asset.json";
 import metalAsset from "@/assets/audio/metal.mp3.asset.json";
@@ -15,20 +14,26 @@ export type AudioTrack = {
   /** 五音 */
   tone: { zh: string; en: string };
   note: { zh: string; en: string };
-  /** 播放來源（Supabase Storage 公開網址，取不到時退回 CDN 備援） */
+  /** 播放來源網址 */
   url: string;
-  source: "supabase" | "cdn";
+  source: "shared-storage" | "cdn";
 };
 
-/** Supabase Storage bucket / 檔名，與 migration 004 一致 */
-export const AUDIO_BUCKET = "audio";
+/**
+ * 音源改為共用「music3」Supabase 專案（bucket: ritual-audio），
+ * 與 music_tzbiomed_3 / music-discovery-hub 共用同一份「natural」風格音檔，
+ * 不在本站另外儲存副本。public bucket 網址固定，不需要 SDK 或環境變數，
+ * 因此這個播放器不會受本站自己的 Supabase 設定影響。
+ */
+const SHARED_MUSIC3_STORAGE_BASE =
+  "https://rmtgismcfakesxtmoxcd.supabase.co/storage/v1/object/public/ritual-audio";
 
-export const AUDIO_FILES: Record<ElementKey, { storagePath: string; fallbackUrl: string }> = {
-  wood: { storagePath: "natural_wood_neutral_short_2026_08.mp3", fallbackUrl: woodAsset.url },
-  fire: { storagePath: "natural_fire_neutral_short_2026_08.mp3", fallbackUrl: fireAsset.url },
-  earth: { storagePath: "natural_earth_neutral_short_2026_08.mp3", fallbackUrl: earthAsset.url },
-  metal: { storagePath: "natural_metal_neutral_short_2026_08.mp3", fallbackUrl: metalAsset.url },
-  water: { storagePath: "natural_water_neutral_short_2026_08.mp3", fallbackUrl: waterAsset.url },
+export const AUDIO_FILES: Record<ElementKey, { fileName: string; fallbackUrl: string }> = {
+  wood: { fileName: "natural_wood_neutral_short_2026_08.mp3", fallbackUrl: woodAsset.url },
+  fire: { fileName: "natural_fire_neutral_short_2026_08.mp3", fallbackUrl: fireAsset.url },
+  earth: { fileName: "natural_earth_neutral_short_2026_08.mp3", fallbackUrl: earthAsset.url },
+  metal: { fileName: "natural_metal_neutral_short_2026_08.mp3", fallbackUrl: metalAsset.url },
+  water: { fileName: "natural_water_neutral_short_2026_08.mp3", fallbackUrl: waterAsset.url },
 };
 
 const META: Record<ElementKey, Omit<AudioTrack, "url" | "source">> = {
@@ -76,21 +81,12 @@ function fallbackTrack(key: ElementKey): AudioTrack {
 }
 
 /**
- * 讀取五行音韻。優先使用 Supabase Storage 的公開網址（音檔調取來源），
- * 未設定或取不到時自動退回 CDN 備援，確保前台永遠有聲音可播。
+ * 讀取五行音韻。優先使用 music3 共用 Storage 的公開網址，
+ * 若日後檔名調整導致取不到，退回 CDN 備援，確保前台永遠有聲音可播。
  */
 export function getAudioTracks(): AudioTrack[] {
   return ELEMENT_ORDER.map((key) => {
-    if (!supabase) return fallbackTrack(key);
-    try {
-      const { data } = supabase.storage
-        .from(AUDIO_BUCKET)
-        .getPublicUrl(AUDIO_FILES[key].storagePath);
-      return data?.publicUrl
-        ? { ...META[key], url: data.publicUrl, source: "supabase" as const }
-        : fallbackTrack(key);
-    } catch {
-      return fallbackTrack(key);
-    }
+    const url = `${SHARED_MUSIC3_STORAGE_BASE}/${AUDIO_FILES[key].fileName}`;
+    return { ...META[key], url, source: "shared-storage" as const };
   });
 }
